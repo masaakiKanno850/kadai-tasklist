@@ -1,10 +1,10 @@
 class TasksController < ApplicationController
+  before_action :set_tasks, only: [:show, :edit, :update, :destroy]
   def index
     @tasks = Tasks.all
   end
   
   def show
-    @tasks = Tasks.find(params[:id])
   end
 
   def new
@@ -24,24 +24,19 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @tasks = Tasks.find(params[:id])
   end
 
   def update
-    @tasks = Tasks.find(params[:id])
-
     if @tasks.update(tasks_params)
       flash[:success] = 'タスク は正常に更新されました'
       redirect_to @tasks
     else
       flash.now[:danger] = 'タスク は更新されませんでした'
       render :edit
-      
     end
   end
 
   def destroy
-    @tasks = Tasks.find(params[:id])
     @tasks.destroy
 
     flash[:success] = 'タスク は正常に削除されました'
