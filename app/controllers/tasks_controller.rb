@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :set_tasks, only: [:show, :edit, :update, :destroy]
   def index
+    @pagy, @users = pagy(User.order(id: :desc), items: 25)
     @tasks = Tasks.all
   end
   
