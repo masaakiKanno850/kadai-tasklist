@@ -1,11 +1,13 @@
 class UsersController < ApplicationController
   def index
-    @pagy, @users = pagy(User.order(id: :desc), items: 25)
-    #@tasks = Tasks.all
+    #@pagy, @users = pagy(User.order(id: :desc), items: 25)
+    @pagy, @tasks = pagy(Tasks.all)
+   
   end
 
   def show
     @user = User.find(params[:id])
+    @tasks = Tasks.all
   end
 
   def new

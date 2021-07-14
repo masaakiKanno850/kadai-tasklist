@@ -1,11 +1,17 @@
 class TasksController < ApplicationController
   before_action :set_tasks, only: [:show, :edit, :update, :destroy]
   def index
-    @pagy, @users = pagy(User.order(id: :desc), items: 25)
-    @tasks = Tasks.all
+     # @pagy, @users = pagy(User.order(id: :desc), items: 25)
+     # @tasks = Tasks.all
+      if logged_in?
+       @pagy, @tasks = pagy(Tasks.all, items: 5)
+       @tasks = current_user.tasks.build  # form_with 用
+       @pagy, @tasks = pagy(current_user.tasks.order(id: :desc))
+      end
   end
   
   def show
+
   end
 
   def new
@@ -13,7 +19,8 @@ class TasksController < ApplicationController
   end
 
   def create
-    @tasks = Tasks.new(tasks_params)
+    @tasks = current_user.tasks.build(tasks_params)
+    
 
     if @tasks.save
       flash[:success] = 'タスク が正常に投稿されました'
@@ -43,6 +50,7 @@ class TasksController < ApplicationController
     flash[:success] = 'タスク は正常に削除されました'
     redirect_to tasks_index_url
   end
+  
   private
   
   def set_tasks
@@ -52,5 +60,4 @@ class TasksController < ApplicationController
   def tasks_params
     params.require(:tasks).permit(:content, :status)
   end
-  
 end
