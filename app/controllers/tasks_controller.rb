@@ -1,5 +1,7 @@
 class TasksController < ApplicationController
+  before_action :require_user_logged_in, only: [:create, :edit,:new, :show]
   before_action :set_tasks, only: [:show, :edit, :update, :destroy]
+  before_action :correct_user, only: [:destroy, :edit, :show ]
   def index
      # @pagy, @users = pagy(User.order(id: :desc), items: 25)
      # @tasks = Tasks.all
@@ -59,5 +61,11 @@ class TasksController < ApplicationController
 
   def tasks_params
     params.require(:tasks).permit(:content, :status)
+  end
+  def correct_user
+    @tasks = current_user.tasks.find_by(id: params[:id])
+    unless @tasks
+      redirect_to root_url
+    end
   end
 end

@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :require_user_logged_in, only: [:show]
   def index
     #@pagy, @users = pagy(User.order(id: :desc), items: 25)
     @pagy, @tasks = pagy(Tasks.all)
@@ -19,7 +20,7 @@ class UsersController < ApplicationController
 
     if @user.save
       flash[:success] = 'ユーザを登録しました。'
-      redirect_to @user
+      redirect_to login_url
     else
       flash.now[:danger] = 'ユーザの登録に失敗しました。'
       render :new
